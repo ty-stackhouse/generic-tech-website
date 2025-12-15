@@ -32,11 +32,28 @@ jobs:
       PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
       PAT_USERNAME: ${{ secrets.PAT_USERNAME }}
       LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-      # LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
-#      Attribute name	Type	Purpose	Example
-#LLM_MODEL	Variable	Set the LLM to use with OpenHands	LLM_MODEL="anthropic/claude-3-5-sonnet-20241022"
-#OPENHANDS_MAX_ITER	Variable	Set max limit for agent iterations	OPENHANDS_MAX_ITER=10
-#OPENHANDS_MACRO	Variable	Customize default macro for invoking the resolver	OPENHANDS_MACRO=@resolveit
-#OPENHANDS_BASE_CONTAINER_IMAGE	Variable	Custom Sandbox (learn more)	OPENHANDS_BASE_CONTAINER_IMAGE="custom_image"
-#TARGET_BRANCH	Variable	Merge to branch other than main	TARGET_BRANCH="dev"
-#TARGET_RUNNER	Variable	Target runner to execute the agent workflow (default ubuntu-latest)	TARGET_RUNNER="custom-runner"
+  merge-openhands-pr:
+    needs: call-openhands-resolver
+    if: success()
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
+    steps:
+      - name: Find and merge OpenHands PR
+        run: |
+          # Get the PR created by the OpenHands workflow
+          PR=$(gh pr list \
+            --state open \
+            --search "author:${{ secrets.PAT_USERNAME }} is:pr" \
+            --json number \
+            --jq '.[0].number')
+          
+          if [ ! -z "$PR" ]; then
+            echo "Found PR #$PR"
+            gh pr merge $PR --auto --squash --delete-branch
+          else
+            echo "No open PR found from OpenHands"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}      
