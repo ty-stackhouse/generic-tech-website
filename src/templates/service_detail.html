@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ service_slug }}</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <header>
+        <h1>{{ service_slug }}</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/services">Services</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>{{ service_slug }} Details</h2>
+            <p>Description and benefits of {{ service_slug }}.</p>
+            <h3>Key Benefits:</h3>
+            <ul>
+                <li>Benefit 1</li>
+                <li>Benefit 2</li>
+                <li>Benefit 3</li>
+            </ul>
+            <h3>Pricing Tiers:</h3>
+            <ul>
+                <li>Basic</li>
+                <li>Professional</li>
+                <li>Enterprise</li>
+            </ul>
+            <button><a href="/request-quote">Request Quote</a></button>
+        </section>
+    </main>
+</body>
+</html>
